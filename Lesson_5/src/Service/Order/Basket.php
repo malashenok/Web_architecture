@@ -17,6 +17,7 @@ use Service\Discount\DiscountInterface;
 use Service\Discount\NullObject;
 use Service\Order\Builder\BasketBuilder;
 use Service\Order\Director\CheckOutProcess;
+use Service\Order\Facade\BasketManager;
 use Service\User\SecurityInterface;
 use Service\User\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -89,17 +90,13 @@ class Basket
 
     public function checkout(): void
     {
-        $checkOutProcess = new CheckOutProcess();
-        $basketBuilder = new BasketBuilder();
-
-        $checkOutProcess->constructBasket($basketBuilder, $this->session, $this->getProductsInfo());
-        $basketBuilder->build();
+        $basketmanager = new BasketManager(
+            new CheckOutProcess(),
+            new BasketBuilder()
+        );
+        $basketmanager->checkBasket($this->session,  $this->getProductsInfo());
     }
 
-    /**
-     * Фабричный метод для репозитория Product
-     * @return ProductRepository
-     */
     protected function getProductRepository(): ProductRepository
     {
         return new ProductRepository();
