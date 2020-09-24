@@ -3,7 +3,6 @@
 
 namespace Service\Order\Director;
 
-
 use Service\Billing\Transfer\Card;
 use Service\Communication\Sender\Email;
 use Service\Discount\NullObject;
