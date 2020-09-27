@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Controller;
 
+use Comparator\PriceComparator;
 use Framework\BaseController;
 use Service\Order\Basket;
 use Service\Product\ProductService;
+use Service\Product\ProductSorter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -51,9 +53,13 @@ class ProductController extends BaseController
             $request->query->get('sort', '')
         );
 
+        $priceSorter = new ProductSorter(new PriceComparator());
+
+        $productListSortedByPrice = $priceSorter->sort($productList);
+
         return $this->render(
             'product/list.html.php',
-            ['productList' => $productList]
+            ['productList' => $productListSortedByPrice]
         );
     }
 }
